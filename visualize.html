@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Cypher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vivagraphjs/0.12.0/vivagraph.js"></script>
+    <style>
+      body {
+        background-color: black;
+      }
+      #graphVisualization {
+        width: 100vw;
+        height: calc(100vh - .5em);
+      }
+      div.alert {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: rgba(255,50,50);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="graphVisualization">
+    </div>
+     <script>
+      checkSupport = function() {
+        if (window.WebGLRenderingContext) {
+          var elem = document.createElement('canvas');
+          if (!elem.getContext || !elem.getContext('experimental-webgl')) {
+            return false;
+          }
+          return true;
+        }
+        return false;
+      },
+      webglSupported = checkSupport();
+
+      renderGraph = async function() {
+        $("#graphVisualization").empty();
+
+        var graph = Viva.Graph.graph();
+
+        var layout = Viva.Graph.Layout.forceDirected(graph, {
+          springLength: 30,
+          springCoeff: 0.0001,
+          dragCoeff: 0.009,
+          gravity: -1.2,
+          theta: 0.8
+        });
+
+        var graphics = webglSupported ? Viva.Graph.View.webglGraphics() : Viva.Graph.View.svgGraphics();
+        graphics.node(function(node){
+          return Viva.Graph.View.webglSquare(20, 0xff8400ff);
+        })
+        .link(function(link) {
+          return Viva.Graph.View.webglLine(0x888888ff);
+        });
+
+        var renderer = Viva.Graph.View.renderer(graph, {
+          layout: layout,
+          graphics: graphics,
+          renderLinks: true,
+          container: document.getElementById('graphVisualization')
+        });
+
+        renderer.run();
+
+        // for (var i = 0; i < 3; i++) {
+        //   renderer.zoomIn();
+        // }
+
+        var i = 0;
+        function myLoop() {
+          setTimeout(function() {
+            i++;
+            if (i < 100) {
+              console.log(i);
+              graph.beginUpdate();
+              graph.addLink(Math.floor(Math.random() * 100), Math.floor(Math.random() * 10));
+              graph.endUpdate();
+              myLoop();
+            }
+          }, 100)
+        }
+
+        // uncomment to fill graph with random data (for testing)
+        // myLoop();
+
+        // Create WebSocket connection.
+        const socket = new WebSocket('ws://localhost:1234');
+
+        // Listen for messages
+        socket.addEventListener('message', (event) => {
+          // console.log('Message from server ', event.data);
+          var i = JSON.parse(event.data)["id"];
+          var s = JSON.parse(event.data)["source"];
+          graph.beginUpdate();
+          graph.addLink(i, s);
+          graph.endUpdate();
+        });
+
+      }
+      renderGraph();
+    </script>
+
+  </body>
+</html>
