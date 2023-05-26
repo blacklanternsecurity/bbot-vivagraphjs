@@ -1,4 +1,4 @@
-# BBOT Graph Visualization (VivaGraphJS)
+# BBOT Graph Visualization ([VivaGraphJS](https://github.com/anvaka/VivaGraphJS))
 
 ![bbot_graph6](https://user-images.githubusercontent.com/20261699/225952607-ddae05fa-f4c9-46ba-90b3-60467b0735a6.gif)
 
