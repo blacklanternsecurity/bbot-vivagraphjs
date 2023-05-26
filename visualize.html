@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Cypher</title>
+    <title>BBOT Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vivagraphjs/0.12.0/vivagraph.js"></script>
@@ -12,12 +11,8 @@
         background-color: black;
       }
       #graphVisualization {
-        width: 100vw;
-        height: calc(100vh - .5em);
-      }
-      div.alert {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: rgba(255,50,50);
+        width: calc(100vw - 1em);
+        height: calc(100vh - 1em);
       }
     </style>
   </head>
@@ -67,6 +62,7 @@
 
         renderer.run();
 
+        // zoom level
         // for (var i = 0; i < 3; i++) {
         //   renderer.zoomIn();
         // }
@@ -93,11 +89,15 @@
 
         // Listen for messages
         socket.addEventListener('message', (event) => {
-          // console.log('Message from server ', event.data);
+          console.log(event.data);
           var i = JSON.parse(event.data)["id"];
           var s = JSON.parse(event.data)["source"];
           graph.beginUpdate();
-          graph.addLink(i, s);
+          if (i && s) {
+            graph.addLink(i, s);
+          } else {
+            console.error(`${i}:${s}`);
+          }
           graph.endUpdate();
         });
 
