@@ -1,6 +1,6 @@
 # BBOT Graph Visualization ([VivaGraphJS](https://github.com/anvaka/VivaGraphJS))
 
-![bbot_graph6](https://user-images.githubusercontent.com/20261699/225952607-ddae05fa-f4c9-46ba-90b3-60467b0735a6.gif)
+https://github.com/blacklanternsecurity/bbot/assets/20261699/ebf2a81e-7530-4a9e-922d-4e62eb949f35
 
 ## Setup
 
