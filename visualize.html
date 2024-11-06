@@ -91,7 +91,7 @@
         socket.addEventListener('message', (event) => {
           console.log(event.data);
           var i = JSON.parse(event.data)["id"];
-          var s = JSON.parse(event.data)["source"];
+          var s = JSON.parse(event.data)["parent"];
           graph.beginUpdate();
           if (i && s) {
             graph.addLink(i, s);
